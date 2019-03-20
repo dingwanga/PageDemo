@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户信息的显示</title>
+</head>
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript">
+	$(function(){
+		function GetRequest() {   
+			   var url = location.search; //获取url中"?"符后的字串   
+			   var theRequest = new Object();   
+			   if (url.indexOf("?") != -1) {   
+			      var str = url.substr(1);   
+			      strs = str.split("&");   
+			      for(var i = 0; i < strs.length; i ++) {   
+			         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+			      }   
+			   }   
+			   return theRequest;   
+			}   
+		 var Request = new Object();
+		    Request = GetRequest();
+		    var id=Request["id"];
+		    $.ajax({
+		    	url:"findById.action",
+		    	type:"post",
+		    	data:{"id":id},
+		    	dataType:"json",
+		    	success:function(data){
+		    		$("#uid").html(data.id);
+		    		$("#userCode").html(data.userCode);
+		    		$("#userName").html(data.userName);
+		    		$("#userPassword").html(data.userPassword);
+		    		$("#phone").html(data.phone);
+		    		$("#birthday").html(data.birthday);
+		    	}
+		    })
+	})
+</script>
+<body>
+	<h2>用户详细信息</h2>
+	用户id：<span id="uid"></span><br/>
+	用户编号：<span id="userCode"></span><br/>
+	用户名称：<span id="userName"></span><br/>
+	用户密码：<span id="userPassword"></span><br/>
+	电话号码：<span id="phone"></span><br/>
+	出生日期：<span id="birthday"></span><br/>
+</body>
+</html>

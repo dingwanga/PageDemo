@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员信息表</title>
+</head>
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$.ajax({
+			type : "post",
+			url : "index.action",
+			dataType : "json",
+			success : function(data) {
+				var str = "";
+				$.each(data.list, function(i, user) {
+					str += "<tr><td>" + user.userCode + "</td><td>"
+							+ user.userName + "</td><td>" + user.userPassword
+							+ "</td><td>" + user.birthday
+							+ "</td><td><a href=\"user.html?id="+user.id+"\">查看</a></td><tr>"
+				});
+
+				$("#table").append(str);
+				$("#curPage").html(data.pageNum);
+				$("#pageCount").html(data.pages);
+			}
+		});
+		
+		$("#prePage").click(function(){
+			var pageNo=parseInt($("#curPage").html())-1;
+			var totalPage=parseInt($("#pageCount").html())
+			if(pageNo<1){
+				alert("已经是首页了！")
+			}else{
+				$.ajax({
+					type : "post",
+					url : "index.action",
+					dataType : "json",
+					data:{"pageNo":pageNo},
+					success:function(data){
+						var str = "";
+						$.each(data.list, function(i, user) {
+							str += "<tr><td>" + user.userCode + "</td><td>"
+									+ user.userName + "</td><td>" + user.userPassword
+									+ "</td><td>" + user.birthday
+									+ "</td><td><a href=\"user.html?id="+user.id+"\">查看</a></td><tr>"
+						});
+						$("#table").html("");
+						$("#table").append(str);
+						$("#curPage").html(data.pageNum);
+						$("#pageCount").html(data.pages);
+					}
+				});
+			}
+		});
+		
+		
+		$("#nextPage").click(function(){
+			var pageNo=parseInt($("#curPage").html())+1;
+			var totalPage=parseInt($("#pageCount").html())
+			if(pageNo>totalPage){
+				alert("已经是最后一页了！")
+			}else{
+				$.ajax({
+					type : "post",
+					url : "index.action",
+					dataType : "json",
+					data:{"pageNo":pageNo},
+					success:function(data){
+						var str = "";
+						$.each(data.list, function(i, user) {
+							str += "<tr><td>" + user.userCode + "</td><td>"
+									+ user.userName + "</td><td>" + user.userPassword
+									+ "</td><td>" + user.birthday
+									+ "</td><td><a href=\"user.html?id="+user.id+"\">查看</a></td><tr>"
+						});
+						$("#table").html("");
+						$("#table").append(str);
+						$("#curPage").html(data.pageNum);
+						$("#pageCount").html(data.pages);
+					}
+				});
+			}
+		});
+
+	});
+</script>
+<body style="text-algin: center">
+	<div style="width: 600px;">
+		<table border="1" style="width: 80%">
+
+			<thead>
+				<tr>
+					<th colspan="4" style="background-color: green">考勤记录信息表</th>
+				</tr>
+				<tr>
+					<th>用户编码</th>
+					<th>用户名称</th>
+					<th>用户密码</th>
+					<th>出生日期</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="table">
+
+			</tbody>
+		</table>
+		当前页/总页数 <span id="curPage"></span>/<span id="pageCount"></span> <a
+			id="prePage" href="javaScript:void(0);">上一页</a>/ <a id="nextPage"
+			href="javaScript:void(0);">下一页</a>
+	</div>
+</html>
